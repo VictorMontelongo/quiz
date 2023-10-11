@@ -1,7 +1,7 @@
 // establish global variables
 
 // This should display win lose condition
-var winLoss = document.querySelector(".win-loss");
+var score = document.querySelector(".score");
 
 // Start button
 var startBtn = document.querySelector(".start-button");
@@ -9,9 +9,10 @@ var startBtn = document.querySelector(".start-button");
 var scoreboard = document.querySelector(".scoreboard");
 // Score total
 var totalScore = document.querySelector(".total-score");
-var score = 0;
 
 var isWin = false;
+
+var wordBlank = ""
 
 //timer options
 var timerElement = document.querySelector(".timer-text");
@@ -21,7 +22,8 @@ var timerCount;
 // question and answer variables
 var quesSelection = document.querySelector(".questions");
 var quesIndex = 0;
-var score = 0;
+
+var scoreCounter = 0;
 
 var questions = [{
   question: "Where is the largest pyramid located in the world",
@@ -58,11 +60,11 @@ function startGame() {
   startTimer()
 
 }
-
+var timer;
 //  my time starter using elements from mini project guess game
 function startTimer() {
   // Sets timer
-  var timer = setInterval(function () {
+  timer = setInterval(function () {
     questionRender()
     timerCount--;
     timerElement.textContent = timerCount;
@@ -71,28 +73,64 @@ function startTimer() {
       if (isWin && timerCount > 0) {
         // Clears interval and stops timer
         clearInterval(timer);
-        winGame();
+        endGame();
       }
     }
     // Tests if time has run out
     if (timerCount === 0) {
       // Clears interval
       clearInterval(timer);
-      loseGame();
+      endGame();
     }
   }, 1000);
 }
 
-function loseGame() {
-  winLoss.textContent = "GAME OVER";
+
+function endGame() {
+  quesSelection.innerHTML = "";
+  wordBlank.textContent = "Nice ";
   startBtn.disabled = false;
+  displayScore()
 }
-function winGame() {
-  winLoss.textContent = "Nice"
-  startBtn.disabled = false;
+function displayScore() {
+  var scoreboard = document.createElement("p")
+  var totalScore = document.createElement("p")
+  quesSelection.appendChild(scoreboard)
+  quesSelection.appendChild(totalScore)
+  scoreboard.textContent = scoreCounter
+  totalScore.textContent = "Total Score"
+  localStorage.setItem("scoreCount", scoreCounter);
+  clearInterval(timer);
 }
+
+// function getPoints() {
+//   // Gets stored points from client storage, if it exists
+//   var storedPoints = localStorage.getItem("scoreCount");
+//   // If stored value doesn't exist, set counter to 0
+//   if (storedPoints === checkAnswer) {
+//     scoreboard = storedPoints + 1;
+//   }
+// //Render win count to page
+// score.textContent = scoreboard;
+
+
+
+
+// function checkScore() {
+
+//   if (scoreCounter === score.join("")) {
+//     // This value is used in the timer function to test if score condition is met
+//     isWin = true;
+//   }
+// }
+
+
 // This function should work with function startGame with the Array of questions
 function questionRender() {
+  if (quesIndex == questions.length) {
+    endGame()
+    return
+  }
   var currentQues = questions[quesIndex];
   // var pTag = document.createElement("p");
   quesSelection.textContent = currentQues.question
@@ -107,21 +145,35 @@ function questionRender() {
     quesSelection.appendChild(div)
   }
 }
-//how to make the correct choice can be made
+//how to make the correct choice 
 function Answerlistener(btn, answer) {
   console.log(btn.textContent, answer)
   if (btn.textContent === answer) {
-    checkAnswer()
-  }
-  questionRender()
+    alert("Nice!");
+    scoreCounter++
+  } else
+    alert("Wrong")
+  timerCount -= 5;
+
+
+  // questionRender()
   quesIndex++
+
 }
 
-function checkAnswer(userAnswer) {
-  if (userAnswer === questions.answer)
-    score = score + 1;
-}
+// function checkAnswer(userAnswer) {
+//   if (userAnswer === questions.answer) {
+//     alert("Nice!");
+//   }
+//   else if (userAnswer !== questions.ansoptions); {
+//     alert("Wrong");
+//     // need to decrease time time if answer incorrect
 
+//   }
+
+// function scoreboard{
+
+// }
 
 
 
